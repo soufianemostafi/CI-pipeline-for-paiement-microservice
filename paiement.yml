@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paiement-deployment
+  labels:
+    app: paiement
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: paiement
+  template:
+    metadata:
+      labels:
+        app: paiement
+    spec:
+      containers:
+        - name: paiement
+          image: registry.gitlab.com/mostafisoufiane/paiement
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9003
+      imagePullSecrets:
+        - name: registry.gitlab.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paiement-service
+spec:
+  selector:
+    app: paiement
+  ports:
+    - protocol: TCP
+      port: 9003
+      targetPort: 9003
